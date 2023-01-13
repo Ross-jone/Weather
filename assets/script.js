@@ -1,3 +1,4 @@
+const key = "29a67ac11f6f49d8a7cb3c8a5ecd2cf3";
 const wrapper = document.querySelector(".wrapper"),
   section_input = wrapper.querySelector(".section_input"),
   info = section_input.querySelector(".info"),
@@ -18,19 +19,22 @@ inputfield.addEventListener("keyup", (e) => {
 });
 
 function requestApi(city) {
-  fetch(`https://weatherdbi.herokuapp.com/data/weather/${city}`)
+  fetch(
+    `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&units=m&days=5&key=${key}`
+  )
     .then((response) => response.json())
     .then((json) => {
-      if (json.currentConditions) {
+      console.log(json);
+      if (json.data) {
         document.getElementById("notFound").style.display = "none";
         document.getElementById("weather").style.display = "block";
-        cityName.innerHTML = json.region;
+        cityName.innerHTML = json.city_name;
         document.getElementById(
           "weatherimg"
-        ).src = `./assets/weatherimg/${json.currentConditions.comment}.png`;
-        comment.innerHTML = json.currentConditions.comment;
-        temp.innerHTML = json.currentConditions.temp.c + "°c";
-        humidity.innerHTML = json.currentConditions.humidity;
+        ).src = `https://www.weatherbit.io/static/img/icons/${json.data[0].weather.icon}.png`;
+        comment.innerHTML = json.data[0].weather.description;
+        temp.innerHTML = json.data[0].temp + "°c";
+        humidity.innerHTML = json.data[0].rh + "%";
       } else {
         document.getElementById("weather").style.display = "none";
         document.getElementById("notFound").style.display = "block";
